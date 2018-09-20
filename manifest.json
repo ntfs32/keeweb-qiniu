@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "manifestVersion": "0.1.0",
+  "name": "keeweb-qiniu",
+  "description": "qiniu oss storage for keeweb",
+  "author": {
+    "name": "ntfs32",
+    "email": "hushuang123a@gmail.com",
+    "url": "https://github.com/ntfs32/keeweb-qiniu"
+  },
+  "resources": {
+    "js": true,
+    "css": true
+  },
+  "licence": "",
+  "url": "https://github.com/ntfs32/keeweb-qiniu/wiki",
+  "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqpjlEAxc3J9r8U9utZPGfWcu03vev6593HWRoHfbit9gZA6WoM5HMXAUpDzJL85dgsQin+IYwrPwTmGHyLlyEr0hfVRkihreJvyHStCRsodUt94zaGD/FbaXovvRfI97Z1vh71Opy8XkAdCosXOs9idtcqxQxdCwFDbB+ez+xuEJiahRRYFfuu2FpcQpIDDudGStcSCJyAPhb9o7dZEiiXYNaws4XEKZyI80mxaDeyn8uMoCxNoUG4uNprHLKFAW+KK2gKmmABGBJd6JxMr3MyWDwi2nw0scdYoqEsLvU8GZvqInKU2Hgbdm9PeJBAGGaUPRoudbO2lJDPj8XG5VzQIDAQAB",
+  "license": "MIT"
+}
