@@ -2,15 +2,15 @@
   "version": "0.0.1",
   "manifestVersion": "0.1.0",
   "name": "keeweb-qiniu",
-  "description": "qiniu oss storage for keeweb",
+  "description": "七牛云存储支持",
   "author": {
     "name": "ntfs32",
     "email": "hushuang123a@gmail.com",
     "url": "https://github.com/ntfs32/keeweb-qiniu"
   },
   "resources": {
-    "js": true,
-    "css": true
+    "js": "fmLuZdG/PNVu1XnLiieBW3IlXckWaJr7pXFf2MwtnVqvEOyiXDth7h7nuZ7QcCta8WOC6g3NxNs2OGW1LctXd59UP2Ij4QAYVIUEC7TP+D2vz37B7g1WOkf9uDbdn2+rr40ukjgW3cQAuGIsStoxMzbDOGLgrsk40ul0Isg2z2oZm9luPq8oGzfRyw1Toay5OoT+8bw03gpk8DAfJSKhr6WsFlsaBl5pFN/UkrIiM5YiS3UVnKVXm/iqBNrUqE9E+nNPz5AkAOx8wTVoHBz1kuxIckUulTRGV9Nb3TXE7MJHDlwdB/Swr2NPQY9XDgwr2m37vGLlxPAzaOHVIolmyA==",
+    "css": "LqQ7PR5wlhFxgghjNtECyL71/9pc2V2dUxTIlIoaxjGqrydtul2hRMgCXU6Ef7S1wjdyJxDhP2xMhBVHQ80k0TiubT6gxTXRykMta581BeIgbvV532uhi10MT/s/7RIxm9dNl8eyKrNToM2b+yhd/cSuuR/ItZvHfBN6PZ+iH1JkjMHTZAu+NxfFI/BJddW9QgIg8UrlcDu/WMmiHrQ3TXdFfvvT670/A5tTJ8igrpdKPGi6A76sNeQBLgs583DEessCk+YcDbXpusua629Uu4FP+9dgs38fdhikdNkqIsszouoxCkK3sDCFNfyU+4u6c8VpMxEClVQW4dgdDnOr8Q=="
   },
   "licence": "",
   "url": "https://github.com/ntfs32/keeweb-qiniu/wiki",
