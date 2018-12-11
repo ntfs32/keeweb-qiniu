@@ -4,6 +4,8 @@
  * @license MIT
  */
 
+
+
 const Storage = require('storage/index');
 const BaseLocale = require('locales/base');
 const StorageBase = require('storage/storage-base');
@@ -20,10 +22,10 @@ const QiniuStorage = StorageBase.extend({
     getOpenConfig: function() {
         return {
             fields: [
-                {id: 'path', title: 'domain', desc: 'Storage Domain', placeholder: 'https://***.com1.z0.glb.clouddn.com', type: 'text', required: true},
-                {id: 'path', title: 'ak', desc: 'Access Key', type: 'text', required: true},
-                {id: 'path', title: 'sk', desc: 'Secret Key', type: 'password', required: true},
-                {id: 'path', title: 'storagepath', desc: 'Storage Path', type: 'text', required: true}
+                {id: 'path', title: 'QiniuStorageFormDomainTitle', desc: 'QiniuStorageFormDomainDesc', placeholder: 'QiniuStorageFormDomainPlaceholder', type: 'text', required: true},
+                {id: 'ak', title: 'ak', desc: 'Access Key', type: 'text', required: true},
+                {id: 'sk', title: 'sk', desc: 'Secret Key', type: 'password', required: true},
+                {id: 'storagepath', title: 'storagepath', desc: 'Storage Path', type: 'text', required: true}
             ]
         };
     },
@@ -36,6 +38,76 @@ const QiniuStorage = StorageBase.extend({
                     options: { default: 'webdavSaveMove', put: 'webdavSavePut' } }
             ]
         };
+    },
+
+    applySetting: function(key, value) {
+        this.appSettings.set(key, value);
+    },
+
+    _request: function(config, callback) {
+        const that = this;
+        if (config.rev) {
+            that.logger.debug(config.op, config.path, config.rev);
+        } else {
+            that.logger.debug(config.op, config.path);
+        }
+        const ts = that.logger.ts();
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener('load', () => {
+            if ([200, 201, 204].indexOf(xhr.status) < 0) {
+                that.logger.debug(config.op + ' error', config.path, xhr.status, that.logger.ts(ts));
+                let err;
+                switch (xhr.status) {
+                    case 404:
+                        err = { notFound: true };
+                        break;
+                    case 412:
+                        err = { revConflict: true };
+                        break;
+                    default:
+                        err = 'HTTP status ' + xhr.status;
+                        break;
+                }
+                if (callback) { callback(err, xhr); callback = null; }
+                return;
+            }
+            const rev = xhr.getResponseHeader('Last-Modified');
+            if (!rev && !config.nostat) {
+                that.logger.debug(config.op + ' error', config.path, 'no headers', that.logger.ts(ts));
+                if (callback) { callback('No Last-Modified header', xhr); callback = null; }
+                return;
+            }
+            const completedOpName = config.op + (config.op.charAt(config.op.length - 1) === 'e' ? 'd' : 'ed');
+            that.logger.debug(completedOpName, config.path, rev, that.logger.ts(ts));
+            if (callback) { callback(null, xhr, rev ? { rev: rev } : null); callback = null; }
+        });
+        xhr.addEventListener('error', () => {
+            that.logger.debug(config.op + ' error', config.path, that.logger.ts(ts));
+            if (callback) { callback('network error', xhr); callback = null; }
+        });
+        xhr.addEventListener('abort', () => {
+            that.logger.debug(config.op + ' error', config.path, 'aborted', that.logger.ts(ts));
+            if (callback) { callback('aborted', xhr); callback = null; }
+        });
+        xhr.open(config.method, config.path);
+        xhr.responseType = 'arraybuffer';
+        if (config.user) {
+            xhr.setRequestHeader('Authorization', 'Basic ' + btoa(config.user + ':' + config.password));
+        }
+        if (config.headers) {
+            _.forEach(config.headers, (value, header) => {
+                xhr.setRequestHeader(header, value);
+            });
+        }
+        if (['GET', 'HEAD'].indexOf(config.method) >= 0) {
+            xhr.setRequestHeader('Cache-Control', 'no-cache');
+        }
+        if (config.data) {
+            const blob = new Blob([config.data], {type: 'application/octet-stream'});
+            xhr.send(blob);
+        } else {
+            xhr.send();
+        }
     },
 
 
@@ -70,6 +142,10 @@ const QiniuStorage = StorageBase.extend({
 });
 
 BaseLocale.QiniuStorage = '七牛云';
+BaseLocale.QiniuStorageFormDomainTitle = '访问域名';
+BaseLocale.QiniuStorageFormDomainDesc = '七牛云';
+BaseLocale.QiniuStorageFormDomainPlaceholder = '例如: https://***.com1.z0.glb.clouddn.com';
+
 
 Storage.QiniuStorage = new QiniuStorage();
 
@@ -80,30 +156,3 @@ module.exports.uninstall = function() {
 
 
 
-// module.exports.getSettings = function() {
-//     return [{
-//         name: 'placepath',
-//         label: '空间名称',
-//         type: 'text',
-//         placeholder: 'keeweb',
-//         value: ''
-//     }, {
-//         name: 'ak',
-//         label: 'AK',
-//         type: 'text',
-//         placeholder: 'Access Key',
-//         value: ''
-//     }, {
-//         name: 'sk',
-//         label: 'SK',
-//         type: 'text',
-//         placeholder: 'Secret Key',
-//         value: ''
-//     }, {
-//         name: 'domain',
-//         label: '访问域名',
-//         type: 'text',
-//         placeholder: '空间名称， 例如: https://***.com1.z0.glb.clouddn.com',
-//         value: ''
-//     }];
-// };
